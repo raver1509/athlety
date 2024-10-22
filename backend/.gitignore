@@ -16,7 +16,7 @@ media
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-.idea   
+.idea
 # Environments 
 .env 
 .venv 
@@ -25,3 +25,6 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+
+__pycache__/
+*.py[cod]
