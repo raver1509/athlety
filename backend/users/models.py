@@ -25,7 +25,7 @@ class CustomUser(AbstractUser):
         null=True,
         blank=True,
     )
-    age = models.IntegerField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
     preferred_sports = models.CharField(
         max_length=10,
@@ -35,6 +35,8 @@ class CustomUser(AbstractUser):
     )
     location = models.CharField(max_length=100, null=True, blank=True)
 
+    friends = models.ManyToManyField("CustomUser", blank=True)
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
@@ -42,3 +44,11 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Friend_Request(models.Model):
+    from_user = models.ForeignKey(
+        CustomUser, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(
+        CustomUser, related_name='to_user', on_delete=models.CASCADE
+    )
