@@ -17,16 +17,22 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .views import hello_world
+from .views import hello_world, GoogleLogin, GoogleLoginCallback
 from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/hello/', hello_world),
-    path('api/authentication/', include('dj_rest_auth.urls')),
-    path('api/registration/',
-         include('dj_rest_auth.registration.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('api/users/', include('users.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('api/hello/', hello_world),
+                  path('api/authentication/', include('dj_rest_auth.urls')),
+                  path('api/registration/',
+                       include('dj_rest_auth.registration.urls')),
+                  path('accounts/', include('allauth.urls')),
+                  path('api/users/', include('users.urls')),
+                  path("api/v1/auth/google/", GoogleLogin.as_view(), name="google_login"),
+                  path(
+                      "api/v1/auth/google/callback/",
+                      GoogleLoginCallback.as_view(),
+                      name="google_login_callback",
+                  ),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
