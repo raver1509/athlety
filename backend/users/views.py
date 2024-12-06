@@ -1,5 +1,6 @@
 # views.py
 from rest_framework import generics, permissions, status
+from django.db.models import Q
 from .models import CustomUser, Friend_Request
 from .serializers import UserProfileSerializer, FriendRequestSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -99,3 +100,39 @@ class IncomingFriendRequestsView(generics.ListAPIView):
 
     def get_queryset(self):
         return Friend_Request.objects.filter(to_user=self.request.user)
+
+
+class Friends(generics.ListAPIView):
+    serializer_class = UserProfileSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.friends.all()
+
+
+class SuggestedUsersView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserProfileSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        sent_requests = Friend_Request.objects.filter(from_user=user).values_list('to_user', flat=True)
+        received_requests = Friend_Request.objects.filter(to_user=user).values_list('from_user', flat=True)
+
+        return CustomUser.objects.filter(
+            Q(level=user.level) |
+            Q(preferred_sports=user.preferred_sports) |
+            Q(location=user.location)
+        ).exclude(
+            id=user.id
+        ).exclude(
+            friends__in=[user]
+        ).exclude(
+            id__in=sent_requests
+        ).exclude(
+            id__in=received_requests
+        ).exclude(
+            level__isnull=True, preferred_sports__isnull=True, location__isnull=True
+        )

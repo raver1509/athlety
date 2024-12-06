@@ -30,6 +30,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -150,7 +159,7 @@ REST_FRAMEWORK = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-SITE_ID = 2
+SITE_ID = 1
 
 JWT_AUTH_COOKIE = 'jwt-auth-token'
 JWT_AUTH_REFRESH_COOKIE = 'jwt-refresh-token'
