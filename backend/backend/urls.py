@@ -29,6 +29,7 @@ urlpatterns = [
                        include('dj_rest_auth.registration.urls')),
                   path('accounts/', include('allauth.urls')),
                   path('api/users/', include('users.urls')),
+                  path('api/events/', include('events.urls')),
                   path("api/v1/auth/google/", GoogleLogin.as_view(), name="google_login"),
                   path(
                       "api/v1/auth/google/callback/",
