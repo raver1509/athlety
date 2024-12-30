@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'users',
     'django_filters',
     'events',
+    'strava'
 ]
 
 MIDDLEWARE = [
