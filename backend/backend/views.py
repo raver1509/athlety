@@ -11,9 +11,11 @@ from urllib.parse import urljoin
 from django.conf import settings
 from rest_framework.permissions import AllowAny
 
+
 @api_view(['GET'])
 def hello_world(request):
     return Response({"message": "Hello, world!"})
+
 
 class GoogleLogin(SocialLoginView):
     permission_classes = [AllowAny]
