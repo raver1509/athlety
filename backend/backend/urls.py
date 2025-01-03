@@ -36,4 +36,5 @@ urlpatterns = [
                       GoogleLoginCallback.as_view(),
                       name="google_login_callback",
                   ),
+                  path('api/chat/', include('chat.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
