@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'events',
     'channels',
     'chat',
+    'drf_yasg',
 ]
 
 ASGI_APPLICATION = 'backend.asgi.application'
@@ -226,4 +227,15 @@ SOCIALACCOUNT_PROVIDERS = {
             "access_type": "online",
         },
     }
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
 }
