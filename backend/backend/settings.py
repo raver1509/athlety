@@ -86,6 +86,26 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_EXPOSE_HEADERS = [
+    'Content-Type',
+    'X-CSRFToken',
+]
+
+CSRF_COOKIE_HTTPONLY = False
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -178,6 +198,9 @@ SITE_ID = 1
 
 JWT_AUTH_COOKIE = 'jwt-auth-token'
 JWT_AUTH_REFRESH_COOKIE = 'jwt-refresh-token'
+JWT_AUTH_COOKIE_SAMESITE = 'Lax'
+JWT_AUTH_SECURE = False
+JWT_AUTH_HTTPONLY = True
 
 LOGIN_REDIRECT_URL = '/'
 
