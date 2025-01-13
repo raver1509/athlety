@@ -5,8 +5,6 @@ import { useAuth } from './AuthProvider';
 const RequireAuth = ({ children }) => {
     const { user, loading } = useAuth();
     
-    console.log('User from RequireAuth:', user);  // Sprawdzamy, co jest w user
-  
     if (loading) {
       return <div>Loading...</div>;
     }

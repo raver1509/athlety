@@ -1,18 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCsrfToken } from '../utils/getCsrfToken';
 
 const AuthContext = createContext();
-
-const getCSRFToken = () => {
-  const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    const [key, value] = cookie.trim().split('=');
-    if (key === 'csrftoken') {
-      return value;
-    }
-  }
-  return null;
-};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -28,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
           const data = await response.json();
           setUser(data);
+          console.log(data)
         } else {
           setUser(null);
         }
@@ -42,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const csrfToken = getCSRFToken();
+    const csrfToken = getCsrfToken();
     try {
       const response = await fetch('http://localhost:8000/api/authentication/login/', {
         method: 'POST',
@@ -57,7 +48,6 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         setUser(data.key);
-        console.log(data.key);
         navigate('/');
       } else {
         const errorData = await response.json();
@@ -70,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   
 
   const registerAndLogin = async (email, username, password1, password2) => {
-    const csrfToken = getCSRFToken();
+    const csrfToken = getCsrfToken();
     try {
       const response = await fetch('http://localhost:8000/api/registration/', {
         method: 'POST',
@@ -250,4 +240,22 @@ export const AuthToggleForm = () => {
       )}
     </div>
   );
+};
+
+export const saveTokens = (tokens) => {
+  localStorage.setItem('access_token', tokens.access_token);
+  localStorage.setItem('refresh_token', tokens.refresh_token);
+};
+
+export const getAccessToken = () => {
+  return localStorage.getItem('access_token');
+};
+
+export const getRefreshToken = () => {
+  return localStorage.getItem('refresh_token');
+};
+
+export const clearTokens = () => {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
 };

@@ -2,7 +2,7 @@
 from rest_framework import generics, permissions, status
 from django.db.models import Q
 from .models import CustomUser, Friend_Request
-from .serializers import UserProfileSerializer, FriendRequestSerializer
+from .serializers import UserProfileSerializer, FriendRequestSerializer, UserSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import UserProfileFilter
 from django.shortcuts import get_object_or_404
@@ -136,3 +136,13 @@ class SuggestedUsersView(generics.ListAPIView):
         ).exclude(
             level__isnull=True, preferred_sports__isnull=True, location__isnull=True
         )
+
+
+class UserDetailView(APIView):
+    def get(self, request, user_id, format=None):
+        try:
+            user = CustomUser.objects.get(pk=user_id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)

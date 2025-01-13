@@ -1,7 +1,9 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Message
+from rest_framework import viewsets
+from .models import Message, Conversation
+from .serializers import MessageSerializer, ConversationSerializer
 
 
 class ChatHistoryView(APIView):
@@ -20,3 +22,11 @@ class ChatHistoryView(APIView):
             'content': msg.content,
             'timestamp': msg.timestamp,
         } for msg in messages])
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+
+class ConversationViewSet(viewsets.ModelViewSet):
+    queryset = Conversation.objects.all()
+    serializer_class = ConversationSerializer
