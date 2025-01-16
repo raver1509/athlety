@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch('http://localhost:8000/api/authentication/logout/', {
         method: 'POST',
-        credentials: 'include',
+        //credentials: 'include',
       });
       if (response.ok) {
         setUser(null);

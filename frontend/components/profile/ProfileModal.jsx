@@ -12,7 +12,7 @@ const ProfileModal = ({ open, onClose }) => {
     if (open) {
       const fetchData = async () => {
         setLoading(true);
-        const csrfToken = getCsrfToken(); // Pobieramy CSRF token
+        const csrfToken = getCsrfToken(); 
         try {
           const response = await fetch('http://localhost:8000/api/users/profile/', {
             method: 'GET',
