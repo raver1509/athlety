@@ -1,14 +1,11 @@
-// /src/components/StravaConnect.js
-
 import React from 'react';
-import { Button } from '@mui/material';  // Możesz użyć Material UI do stylizacji
+import { Button } from '@mui/material';
 
-const STRAVA_AUTH_URL = 'http://localhost:8000/api/strava/auth';  // Backendowy endpoint
+const STRAVA_AUTH_URL = 'http://localhost:8000/api/strava/auth';  // Backend endpoint for authentication
 
 const StravaConnect = () => {
-
   const handleConnect = () => {
-    // Przekierowanie do backendu w celu autoryzacji
+    // Redirect to the backend for Strava authentication
     window.location.href = STRAVA_AUTH_URL;
   };
 

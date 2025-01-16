@@ -1,34 +1,65 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress, Typography, Button } from '@mui/material';
 import axios from 'axios';
+import { getCsrfToken } from '../../utils/getCsrfToken';
 
 const StravaDashboard = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [importing, setImporting] = useState(false);
+
+  const fetchUserData = async () => {
+    const csrfToken = getCsrfToken();
+    try {
+      const response = await axios.get('http://localhost:8000/api/users/profile/', {
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        setUser(response.data);
+        setError(null); // Clear any previous error
+      } else {
+        setError('Failed to fetch user data');
+      }
+    } catch (err) {
+      setError('Error fetching user data');
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const accessToken = localStorage.getItem('strava_access_token');
-      if (accessToken) {
-        try {
-          const response = await axios.get('https://www.strava.com/api/v3/athlete', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          setUser(response.data);
-        } catch (err) {
-          setError('Unable to fetch user data');
-        }
-      } else {
-        setError('No access token found');
-      }
-      setLoading(false);
-    };
-
     fetchUserData();
   }, []);
+
+  const handleImportData = async () => {
+    setImporting(true);
+    const csrfToken = getCsrfToken();
+    try {
+      const response = await axios.post('http://localhost:8000/api/strava/import/', {}, {
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        alert('Data imported successfully!');
+        // Refetch user data from the database
+        fetchUserData();
+      } else {
+        alert('Failed to import data');
+      }
+    } catch (err) {
+      alert('Error importing data');
+    }
+    setImporting(false);
+  };
 
   if (loading) {
     return <CircularProgress />;
@@ -40,10 +71,20 @@ const StravaDashboard = () => {
 
   return (
     <div>
-      <h1>Welcome, {user.firstname}!</h1>
-      <Typography variant="h6">Username: {user.username}</Typography>
-      <Typography variant="body1">City: {user.city}</Typography>
-      <Typography variant="body1">Country: {user.country}</Typography>
+      <h1>Welcome, {user.username}!</h1>
+      <Typography variant="h6">Email: {user.email}</Typography>
+      <Typography variant="body1">Total Rides: {user.total_rides}</Typography>
+      <Typography variant="body1">Total Distance: {user.total_distance} km</Typography>
+      <Typography variant="body1">Total Elevation Gain: {user.total_elevation_gain} m</Typography>
+      
+      <Button 
+        variant="contained" 
+        color="primary" 
+        onClick={handleImportData} 
+        disabled={importing}
+      >
+        {importing ? 'Importing...' : 'Import/Refresh Strava Data'}
+      </Button>
     </div>
   );
 };

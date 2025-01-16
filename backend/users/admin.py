@@ -8,7 +8,7 @@ class CustomUserAdmin(UserAdmin):
     # Define the fields to be displayed in the admin panel
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'level', 'date_of_birth', 'profile_picture', 'preferred_sports', 'location', 'friends')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'level', 'date_of_birth', 'profile_picture', 'preferred_sports', 'location', 'friends', 'strava_access_token')}),
         ('Permissions', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
