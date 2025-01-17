@@ -86,20 +86,52 @@ class DeleteFriendView(APIView):
         return Response({"detail": "Friend removed."}, status=status.HTTP_200_OK)
 
 
-class OutgoingFriendRequestsView(generics.ListAPIView):
-    serializer_class = FriendRequestSerializer
+class OutgoingFriendRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return Friend_Request.objects.filter(from_user=self.request.user)
+    def get(self, request, *args, **kwargs):
+        requests = Friend_Request.objects.filter(from_user=request.user)
+        data = []
+
+        for friend_request in requests:
+            request_data = FriendRequestSerializer(friend_request).data
+            to_user = CustomUser.objects.get(id=friend_request.to_user_id)
+            request_data['to_user_username'] = to_user.username
+            data.append(request_data)
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
-class IncomingFriendRequestsView(generics.ListAPIView):
-    serializer_class = FriendRequestSerializer
+class IncomingFriendRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return Friend_Request.objects.filter(to_user=self.request.user)
+    def get(self, request, *args, **kwargs):
+        requests = Friend_Request.objects.filter(to_user=request.user)
+        data = []
+
+        for friend_request in requests:
+            request_data = FriendRequestSerializer(friend_request).data
+            from_user = CustomUser.objects.get(id=friend_request.from_user_id)
+            request_data['from_user_username'] = from_user.username
+            data.append(request_data)
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class CancelFriendRequestView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        to_user_id = kwargs.get('to_user_id')
+        to_user = get_object_or_404(CustomUser, id=to_user_id)
+
+        friend_request = Friend_Request.objects.filter(from_user=request.user, to_user=to_user).first()
+        if not friend_request:
+            return Response({"detail": "No pending friend request found."}, status=status.HTTP_400_BAD_REQUEST)
+
+        friend_request.delete()
+
+        return Response({"detail": "Friend request canceled."}, status=status.HTTP_200_OK)
 
 
 class Friends(generics.ListAPIView):
@@ -146,5 +178,3 @@ class UserDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except user.DoesNotExist:
             return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-

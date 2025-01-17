@@ -1,5 +1,3 @@
-// components/friends/SuggestedUsers.jsx
-
 import React, { useEffect, useState } from 'react';
 import { List, ListItem, ListItemText, Button } from '@mui/material';
 import { getCsrfToken } from '../../utils/getCsrfToken';
@@ -12,8 +10,6 @@ const SuggestedUsers = () => {
     const fetchSuggestedUsers = async () => {
       try {
         const csrfToken = getCsrfToken();
-
-        // Pobieranie sugestii użytkowników
         const response = await fetch('http://localhost:8000/api/users/suggested-users/', {
           method: 'GET',
           headers: {
@@ -28,7 +24,7 @@ const SuggestedUsers = () => {
         }
 
         const data = await response.json();
-        setSuggestedUsers(data); // Ustawienie danych sugestii
+        setSuggestedUsers(data);
       } catch (error) {
         console.error('Failed to fetch suggested users:', error);
         setError('Failed to fetch suggested users');
@@ -37,6 +33,30 @@ const SuggestedUsers = () => {
 
     fetchSuggestedUsers();
   }, []);
+
+  const sendFriendRequest = async (toUserId) => {
+    const csrfToken = getCsrfToken();
+    try {
+      const response = await fetch('http://localhost:8000/api/users/friends/request/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ to_user: toUserId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send friend request');
+      }
+
+      alert('Friend request sent successfully!');
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+      alert('Failed to send friend request');
+    }
+  };
 
   return (
     <div>
@@ -51,7 +71,7 @@ const SuggestedUsers = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => alert(`Sending friend request to ${user.username}`)} // Można dodać funkcję wysyłania zaproszenia
+                onClick={() => sendFriendRequest(user.id)}
               >
                 Send Request
               </Button>
