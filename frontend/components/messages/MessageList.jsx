@@ -1,39 +1,39 @@
-// /src/components/MessageList.js
-
-import React, { useEffect, useState } from 'react';
-import { List, ListItem, Typography } from '@mui/material';
-import axios from 'axios';
+import React, { useState, useEffect } from "react"; 
 
 const MessageList = ({ conversationId }) => {
-  const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(`/chat/api/messages/?conversation=${conversationId}`);
-        setMessages(response.data);
-      } catch (err) {
-        console.error('Error fetching messages', err);
-      }
-    };
+    useEffect(() => {
+        // Fetch history
+        fetch(`api/chat/api/conversations/${conversationId}/messages/`)
+            .then((res) => res.json())
+            .then((data) => setMessages(data));
 
-    if (conversationId) {
-      fetchMessages();
-    }
-  }, [conversationId]);
+        // Connect WebSocket
+        const ws = new WebSocket(`ws://127.0.0.1:8000/api/chat/ws/chat/${conversationId}/`);
+        setSocket(ws);
 
-  return (
-    <div>
-      <Typography variant="h6">Messages</Typography>
-      <List>
-        {messages.map((message) => (
-          <ListItem key={message.id}>
-            <Typography variant="body1">{message.sender}: {message.content}</Typography>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+        ws.onmessage = (event) => {
+            const newMessage = JSON.parse(event.data);
+            setMessages((prev) => [...prev, newMessage]);
+        };
+
+        return () => ws.close();
+    }, [conversationId]);
+
+    return (
+        <div>
+            <h3>Messages</h3>
+            <ul>
+                {messages.map((msg, index) => (
+                    <li key={index}>
+                        <strong>{msg.sender}:</strong> {msg.message}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default MessageList;

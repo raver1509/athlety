@@ -26,6 +26,7 @@ const FriendList = () => {
 
         const data = await response.json();
         setFriends(data);
+        console.log(data);
       } catch (error) {
         console.error('Failed to fetch friends:', error);
         setError('Failed to fetch friends');
