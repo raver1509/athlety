@@ -1,31 +1,25 @@
-// /src/components/MessageInput.js
+import React, { useState } from "react"; 
+const MessageInput = ({ socket }) => {
+    const [message, setMessage] = useState("");
 
-import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
-import { sendMessage } from '../../utils/chatService';
+    const sendMessage = () => {
+        if (message.trim()) {
+            socket.send(JSON.stringify({ message }));
+            setMessage("");
+        }
+    };
 
-const MessageInput = ({ conversationId }) => {
-  const [message, setMessage] = useState('');
-
-  const handleSendMessage = () => {
-    if (message.trim() === '') return;
-    sendMessage(message, conversationId);
-    setMessage('');
-  };
-
-  return (
-    <div>
-      <TextField
-        label="Write a message"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        fullWidth
-      />
-      <Button onClick={handleSendMessage} variant="contained" color="primary">
-        Send
-      </Button>
-    </div>
-  );
+    return (
+        <div>
+            <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message..."
+            />
+            <button onClick={sendMessage}>Send</button>
+        </div>
+    );
 };
 
 export default MessageInput;
