@@ -76,7 +76,23 @@ const StravaDashboard = () => {
       <Typography variant="body1">Total Rides: {user.total_rides}</Typography>
       <Typography variant="body1">Total Distance: {user.total_distance} km</Typography>
       <Typography variant="body1">Total Elevation Gain: {user.total_elevation_gain} m</Typography>
-      
+      <Typography variant="body1">Total Time: {user.total_time} min</Typography>
+      <Typography variant="body1">Average Speed: {user.average_speed} m/s</Typography>
+
+      <Typography variant="h6">Detailed Activity Data</Typography>
+      {user.activities_details && user.activities_details.map((activity, index) => (
+        <div key={index}>
+          <Typography variant="body2">Activity {index + 1}</Typography>
+          <Typography variant="body2">Name: {activity.name}</Typography>
+          <Typography variant="body2">Type: {activity.type}</Typography>
+          <Typography variant="body2">Sport Type: {activity.sport_type}</Typography>
+          <Typography variant="body2">Distance: {activity.distance / 1000} km</Typography>
+          <Typography variant="body2">Time: {activity.moving_time / 60} min</Typography>
+          <Typography variant="body2">Elevation Gain: {activity.total_elevation_gain} m</Typography>
+          <Typography variant="body2">Start Date: {activity.start_date}</Typography>
+        </div>
+      ))}
+
       <Button 
         variant="contained" 
         color="primary" 

@@ -82,6 +82,7 @@ def import_strava_data(request):
     if not user.strava_access_token:
         return Response({'error': 'Strava is not connected'}, status=400)
 
+    # Sprawdzamy, czy token wygasł i odświeżamy go, jeśli to konieczne
     if user.strava_token_expires_at <= now():
         refresh_response = requests.post(STRAVA_TOKEN_URL, data={
             'client_id': settings.STRAVA_CLIENT_ID,
@@ -98,23 +99,47 @@ def import_strava_data(request):
         else:
             return Response({'error': 'Failed to refresh token'}, status=refresh_response.status_code)
 
+    # Pobieranie wszystkich aktywności użytkownika
     activities_response = requests.get(STRAVA_ACTIVITIES_URL, headers={
         'Authorization': f"Bearer {user.strava_access_token}"
+    }, params={
+        'per_page': 200,  # Pobieranie większej ilości danych (max 200 na zapytanie)
+        'page': 1  # Można dodawać strony dla jeszcze większej liczby aktywności
     })
     if activities_response.status_code != 200:
         return Response({'error': 'Failed to fetch data from Strava'}, status=activities_response.status_code)
 
     activities = activities_response.json()
 
+    # Agregowanie danych o aktywnościach
     total_distance = sum(activity['distance'] for activity in activities if 'distance' in activity)
-    total_elevation = sum(
-        activity['total_elevation_gain'] for activity in activities if 'total_elevation_gain' in activity)
-    user.total_rides = len(activities)
-    user.total_distance = total_distance / 1000  # Konwersja z metrów na kilometry
+    total_elevation = sum(activity['total_elevation_gain'] for activity in activities if 'total_elevation_gain' in activity)
+    total_time = sum(activity['moving_time'] for activity in activities if 'moving_time' in activity)
+    total_activities = len(activities)
+
+    # Dodatkowe dane - średnia prędkość
+    total_speed = sum(activity['average_speed'] for activity in activities if 'average_speed' in activity) / total_activities if total_activities else 0
+
+    # Słownik z wszystkimi danymi
+    detailed_data = {
+        "total_activities": total_activities,
+        "total_distance_km": total_distance / 1000,  # Konwersja na kilometry
+        "total_elevation_gain_m": total_elevation,  # Wysokość w metrach
+        "total_time_min": total_time // 60,  # Czas w minutach
+        "average_speed_mps": total_speed,  # Średnia prędkość
+        "activities_details": activities  # Szczegóły aktywności
+    }
+
+    # Zapisanie danych w modelu użytkownika (na przykład wstawienie sumy)
+    user.total_rides = total_activities
+    user.total_distance = total_distance / 1000  # W km
     user.total_elevation_gain = total_elevation
+    user.total_time = total_time // 60  # W minutach
+    user.average_speed = total_speed
     user.save()
 
-    return Response({'message': 'Data imported successfully'})
+    return Response(detailed_data)
+
 
 
 class StravaAccessTokenView(APIView):
