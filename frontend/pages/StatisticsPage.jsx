@@ -3,6 +3,7 @@ import StravaConnect from '../components/strava/StravaConnect';
 import StravaDashboard from '../components/strava/StravaDashboard';
 import axios from 'axios';
 import { getCsrfToken } from '../utils/getCsrfToken';
+import Navbar from '../components/layout/Navbar';
 
 const StatisticsPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,7 +45,12 @@ const StatisticsPage = () => {
   }, [accessToken]); // Only run this when accessToken changes
 
   if (isAuthenticated) {
-    return <StravaDashboard />;
+    return <>
+      <Navbar/>
+      <div className='global'>
+        <StravaDashboard />;
+      </div>
+    </>
   }
 
   return (
