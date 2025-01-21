@@ -2,7 +2,7 @@
 from rest_framework import generics, permissions, status
 from django.db.models import Q
 from .models import CustomUser, Friend_Request
-from .serializers import UserProfileSerializer, FriendRequestSerializer, UserSerializer
+from .serializers import UserProfileSerializer, FriendRequestSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import UserProfileFilter
 from django.shortcuts import get_object_or_404
