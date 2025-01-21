@@ -1,6 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, ListItemText, Button } from '@mui/material';
+import { List, ListItem, ListItemText, Button, Typography } from '@mui/material';
 import { getCsrfToken } from '../../utils/getCsrfToken';
+import { styled } from '@mui/system';
+import './SuggestedUsers.css';
+
+const StyledButton = styled(Button)({
+  color: '#000',
+  border: '1px solid #000',
+  backgroundColor: 'transparent',
+  borderRadius: '5px',
+  padding: '6px 12px',
+  fontSize: '14px',
+  fontWeight: 500,
+  textTransform: 'none',
+  '&:hover': {
+    color: '#fff',
+    backgroundColor: '#000',
+    transform: 'scale(1.05)',
+  },
+});
+
+const SuggestedUsersContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '20px',
+  backgroundColor: '#f4f4f4',
+  borderRadius: '8px',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  width: '100%', // Rozciąganie na całą szerokość
+  height: '100%', // Rozciąganie na całą wysokość
+  boxSizing: 'border-box',
+  margin: '0', // Usunięcie marginesów, aby kontener wypełniał dostępną przestrzeń
+  flexGrow: 1, // Pozwala kontenerowi rozciągać się na całą dostępną przestrzeń
+});
+
+const Title = styled(Typography)({
+  fontSize: '24px',
+  fontWeight: 600,
+  marginBottom: '20px',
+  color: '#333',
+  textAlign: 'center',
+});
+
+const ErrorMessage = styled('div')({
+  color: 'red',
+  textAlign: 'center',
+  marginBottom: '15px',
+});
+
+const NoSuggestedUsersItem = styled(ListItem)({
+  justifyContent: 'center',
+  color: '#555',
+  fontStyle: 'italic',
+});
 
 const SuggestedUsers = () => {
   const [suggestedUsers, setSuggestedUsers] = useState([]);
@@ -59,27 +111,26 @@ const SuggestedUsers = () => {
   };
 
   return (
-    <div>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+    <SuggestedUsersContainer>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <Title variant="h4">Suggested Users</Title>
       <List>
         {suggestedUsers.length === 0 ? (
-          <ListItem>No suggested users</ListItem>
+          <NoSuggestedUsersItem>
+            <span>No suggested users</span>
+          </NoSuggestedUsersItem>
         ) : (
           suggestedUsers.map((user) => (
-            <ListItem key={user.id}>
+            <ListItem key={user.id} sx={{ borderBottom: '1px solid #eee' }}>
               <ListItemText primary={user.username} />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => sendFriendRequest(user.id)}
-              >
+              <StyledButton onClick={() => sendFriendRequest(user.id)}>
                 Send Request
-              </Button>
+              </StyledButton>
             </ListItem>
           ))
         )}
       </List>
-    </div>
+    </SuggestedUsersContainer>
   );
 };
 

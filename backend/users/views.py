@@ -171,10 +171,10 @@ class SuggestedUsersView(generics.ListAPIView):
 
 
 class UserDetailView(APIView):
-    def get(self, request, user_id, format=None):
+    def get(self, request, username, format=None):
         try:
-            user = CustomUser.objects.get(pk=user_id)
-            serializer = UserSerializer(user)
+            user = CustomUser.objects.get(username=username)
+            serializer = UserProfileSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except user.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)

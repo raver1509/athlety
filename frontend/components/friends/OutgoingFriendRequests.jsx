@@ -1,6 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, ListItemText, Button } from '@mui/material';
+import { List, ListItem, ListItemText, Button, Typography } from '@mui/material';
 import { getCsrfToken } from '../../utils/getCsrfToken';
+import { styled } from '@mui/system';
+import './FriendRequests.css';
+
+const StyledButton = styled(Button)({
+  color: '#000',
+  border: '1px solid #000',
+  backgroundColor: 'transparent',
+  borderRadius: '5px',
+  padding: '6px 12px',
+  fontSize: '14px',
+  fontWeight: 500,
+  textTransform: 'none',
+  '&:hover': {
+    color: '#fff',
+    backgroundColor: '#000',
+    transform: 'scale(1.05)',
+  },
+});
+
+const FriendRequestContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '20px',
+  backgroundColor: '#f4f4f4',
+  borderRadius: '8px',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  width: '100%', // Rozciąganie na całą szerokość
+  height: '100%', // Rozciąganie na całą wysokość
+  boxSizing: 'border-box',
+  margin: '0', // Usunięcie marginesów, aby kontener wypełniał dostępną przestrzeń
+  flexGrow: 1, // Pozwala kontenerowi rozciągać się na całą dostępną przestrzeń
+});
+
+const Title = styled(Typography)({
+  fontSize: '24px',
+  fontWeight: 600,
+  marginBottom: '20px',
+  color: '#333',
+  textAlign: 'center',
+});
+
+const ErrorMessage = styled('div')({
+  color: 'red',
+  textAlign: 'center',
+  marginBottom: '15px',
+});
+
+const NoRequestsItem = styled(ListItem)({
+  justifyContent: 'center',
+  color: '#555',
+  fontStyle: 'italic',
+});
 
 const OutgoingFriendRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -52,7 +104,6 @@ const OutgoingFriendRequests = () => {
         throw new Error('Failed to cancel friend request');
       }
 
-      // Update the state to remove the canceled request
       setRequests(requests.filter(request => request.to_user !== toUserId));
     } catch (error) {
       console.error('Failed to cancel friend request:', error);
@@ -61,27 +112,26 @@ const OutgoingFriendRequests = () => {
   };
 
   return (
-    <div>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <List>
+    <FriendRequestContainer>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <Title variant="h4">Outgoing Friend Requests</Title>
+      <List sx={{ width: '100%', flexGrow: 1, overflowY: 'auto' }}>
         {requests.length === 0 ? (
-          <ListItem>No outgoing friend requests</ListItem>
+          <NoRequestsItem>
+            <span>No outgoing friend requests</span>
+          </NoRequestsItem>
         ) : (
           requests.map((request) => (
-            <ListItem key={request.id}>
+            <ListItem key={request.id} sx={{ borderBottom: '1px solid #eee' }}>
               <ListItemText primary={`Request to ${request.to_user_username}`} />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleCancelRequest(request.to_user)}
-              >
+              <StyledButton onClick={() => handleCancelRequest(request.to_user)}>
                 Cancel
-              </Button>
+              </StyledButton>
             </ListItem>
           ))
         )}
       </List>
-    </div>
+    </FriendRequestContainer>
   );
 };
 

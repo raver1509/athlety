@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getCsrfToken } from '../utils/getCsrfToken';
 import axios from 'axios';
+import './ChatPage.css';
+import Navbar from '../components/layout/Navbar';
 
 const ChatPage = () => {
   const [friends, setFriends] = useState([]);
@@ -97,35 +99,52 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="chat-page">
-      <div className="friends-list">
+    <>
+    <Navbar />
+    <div className="chat-container global">
+      <div className="friend-list-panel">
         <h3>Your Friends</h3>
         <ul>
           {friends.map((friend) => (
-            <li key={friend.id} onClick={() => handleFriendClick(friend)}>
+            <li
+              key={friend.id}
+              className="friend-list-item"
+              onClick={() => handleFriendClick(friend)}
+            >
               {friend.username}
             </li>
           ))}
         </ul>
       </div>
-      <div className="chat-area">
+      <div className="chat-panel">
         {currentFriend ? (
           <>
-            <h3>Chat with {currentFriend.username}</h3>
-            <ul>
+            <h3 className="chat-header">Chat with {currentFriend.username}</h3>
+            <div className="message-list">
               {messages.map((message, index) => (
-                <li key={index}>
-                  <strong>{message.senderUsername}:</strong> {message.message}
-                </li>
+                <div
+                  key={index}
+                  className={`message-item ${
+                    message.senderUsername === user.username
+                      ? "sender"
+                      : "receiver"
+                  }`}
+                >
+                  <strong>{message.senderUsername}</strong>
+                  <p>{message.message}</p>
+                </div>
               ))}
-            </ul>
-            <div>
+            </div>
+            <div className="message-input-container">
               <textarea
+                className="message-textarea"
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
-                placeholder="Type a message"
+                placeholder="Type a message..."
               />
-              <button onClick={handleSendMessage}>Send</button>
+              <button className="send-button" onClick={handleSendMessage}>
+                Send
+              </button>
             </div>
           </>
         ) : (
@@ -133,6 +152,7 @@ const ChatPage = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

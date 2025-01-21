@@ -15,5 +15,5 @@ urlpatterns = [
     path('friends/requests/outgoing/', OutgoingFriendRequestsView.as_view(), name='outgoing-friend-requests'),
     path('friends/requests/incoming/', IncomingFriendRequestsView.as_view(), name='incoming-friend-requests'),
     path('friends/requests/cancel/<int:to_user_id>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
-    path('<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
+    path('<str:username>/', UserDetailView.as_view(), name='user-detail'),
 ]

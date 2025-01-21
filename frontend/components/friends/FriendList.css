@@ -1,0 +1,75 @@
+.friend-list-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.friend-list-title {
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.friend-list {
+  padding: 0;
+  margin: 0;
+}
+
+.friend-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease;
+}
+
+.friend-list-item:hover {
+  background-color: #f0f0f0;
+}
+
+.friend-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+}
+
+.no-friends-item {
+  text-align: center;
+  background-color: transparent;
+}
+
+.no-friends-text {
+  font-size: 16px;
+  color: #888;
+}
+
+.remove-friend-button {
+  color: #000; /* Czarny kolor tekstu */
+  border: 1px solid #000; /* Czarna ramka */
+  background-color: transparent; /* Przezroczyste tło */
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.remove-friend-button:hover {
+  color: #fff; /* Biały tekst na hover */
+  background-color: #000; /* Czarny kolor tła na hover */
+  transform: scale(1.05); /* Delikatne powiększenie */
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
