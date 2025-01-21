@@ -7,7 +7,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'level', 'date_of_birth', 'profile_picture', 'preferred_sports',
-                  'location', 'friends', 'total_rides', 'total_distance', 'total_elevation_gain']
+                  'location', 'friends', 'total_rides', 'total_distance', 'total_elevation_gain',
+                  'average_speed', 'total_time', 'activities_details']
         read_only_fields = ['username', 'email', 'friends']
 
 

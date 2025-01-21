@@ -48,7 +48,7 @@ const StatisticsPage = () => {
     return <>
       <Navbar/>
       <div className='global'>
-        <StravaDashboard />;
+        <StravaDashboard />
       </div>
     </>
   }

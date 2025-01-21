@@ -12,6 +12,9 @@ class CustomUser(AbstractUser):
     total_rides = models.IntegerField(default=0)
     total_distance = models.FloatField(default=0.0)
     total_elevation_gain = models.FloatField(default=0.0)
+    total_time = models.FloatField(default=0.0)
+    average_speed = models.FloatField(default=0.0)
+    activities_details = models.JSONField(blank=True, null=True)
 
     class PreferredSports(models.TextChoices):
         CYCLING = 'cycling', _('Cycling')

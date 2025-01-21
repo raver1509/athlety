@@ -71,7 +71,7 @@ const StravaDashboard = () => {
   if (error) {
     return <Typography color="error">{error}</Typography>;
   }
-
+  console.log(user)
   return (
     <Box sx={{ padding: 4 }}>
       <Typography variant="h4" gutterBottom>
