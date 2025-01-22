@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Grid, Paper } from '@mui/material';
 import { useAuth } from '../auth/AuthProvider';
 
-const LoginPage = () => {
-  const { login } = useAuth();
+const RegisterPage = () => {
+  const { registerAndLogin } = useAuth();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    await registerAndLogin(email, username, password1, password2);
   };
 
   return (
@@ -24,7 +26,7 @@ const LoginPage = () => {
           }}
         >
           <Typography component="h1" variant="h4">
-            Login
+            Register
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2, width: '100%' }}>
             <TextField
@@ -35,7 +37,6 @@ const LoginPage = () => {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -43,13 +44,33 @@ const LoginPage = () => {
               margin="normal"
               required
               fullWidth
-              name="password"
+              id="username"
+              label="Username"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password1"
               label="Password"
               type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="password1"
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password2"
+              label="Confirm Password"
+              type="password"
+              id="password2"
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
             />
             <Button
               type="submit"
@@ -57,12 +78,12 @@ const LoginPage = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Register
             </Button>
             <Typography variant="body2" align="center">
-              Don't have an account?{' '}
-              <Button variant="text" href="/register">
-                Register here
+              Already have an account?{' '}
+              <Button variant="text" href="/login">
+                Login here
               </Button>
             </Typography>
           </Box>
@@ -72,4 +93,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -7,6 +7,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import OptionsMenu from './OptionsMenu';
 import MenuContent from './MenuContent';
+import { useState, useEffect } from 'react';
+import { getCsrfToken } from '../../utils/getCsrfToken';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -27,7 +30,32 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
   },
 }));
 
-export default function Navbar() {
+const Navbar = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const csrfToken = getCsrfToken();
+    fetch('http://localhost:8000/api/authentication/user/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setFirstName(data.first_name || '');
+        setLastName(data.last_name || '');
+        setEmail(data.email || '');
+      })
+      .catch((err) => {
+        console.error('An error occurred while fetching the user data', err);
+      });
+  }, []);
+
   return (
     <Drawer
       variant="permanent"
@@ -74,31 +102,37 @@ export default function Navbar() {
       >
         <Avatar
           alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
           sx={{
             width: 42,
             height: 42,
-            border: '2px solid rgba(255, 255, 255, 0.3)', // Obramówka wokół avatara
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#9e9e9e',
+            color: 'white',
           }}
-        />
-        <Box sx={{ mr: 'auto' }}>
+        >
+          <AccountCircleIcon sx={{ fontSize: '30px' }} />
+        </Avatar>
+         <Box sx={{ mr: 'auto' }}>
           <Typography
             variant="body2"
             sx={{
               fontWeight: 600,
               lineHeight: '20px',
-              color: '#ffffff', // Biały tekst
+              color: '#ffffff', 
             }}
           >
-            Riley Carter
+            {firstName} {lastName} 
           </Typography>
           <Typography
             variant="caption"
             sx={{
-              color: 'rgba(255, 255, 255, 0.6)', // Przygaszony biały tekst
+              color: 'rgba(255, 255, 255, 0.6)', 
             }}
           >
-            riley@email.com
+            {email}
           </Typography>
         </Box>
         <OptionsMenu />
@@ -106,3 +140,5 @@ export default function Navbar() {
     </Drawer>
   );
 }
+
+export default Navbar;

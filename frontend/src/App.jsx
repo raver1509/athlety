@@ -5,11 +5,13 @@ import EventPage from '../pages/EventPage';
 import FriendsPage from '../pages/FriendsPage';
 import StatisticsPage from '../pages/StatisticsPage';
 import ChatPage from '../pages/ChatPage';
+import RegisterPage from '../pages/RegisterPage';
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<HomePage />} />
       <Route path="/events" element={<EventPage />} />
       <Route path="/messages" element={<ChatPage />} />

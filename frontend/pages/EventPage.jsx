@@ -3,7 +3,7 @@ import BasicCard from '../components/events/BasicCard';
 import axios from 'axios';
 import Navbar from '../components/layout/Navbar';
 import EventCreateForm from '../components/events/EventCreateForm';
-import { Box, Snackbar } from '@mui/material';
+import { Box, Snackbar, Typography } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import Button from '@mui/joy/Button';
 import DeleteEventButton from '../components/events/DeleteEventButton';
@@ -76,7 +76,9 @@ export default function Events() {
       <Navbar />
       <div className="global">
         <div style={{ display: 'flex', gap: '50px' }}>
-          <h1>Events</h1>
+          <Typography variant="h4" sx={{padding: 1}}>
+            Events
+          </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Button
               variant="outlined"

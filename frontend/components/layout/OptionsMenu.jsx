@@ -34,7 +34,7 @@ export default function OptionsMenu() {
 
   return (
     <>
-      <IconButton aria-label="Open menu" onClick={handleClick} sx={{ color: 'white', padding: '8px' }}>
+      <IconButton aria-label="Open menu" onClick={handleClick} sx={{ color: 'white', padding: '8px', right: '10px' }}>
         <MoreVertRoundedIcon />
       </IconButton>
       <Menu
