@@ -149,6 +149,19 @@ const StravaDashboard = () => {
         </Grid>
       </Grid>
 
+      {/* Import/Refresh Button */}
+      <Box sx={{ marginTop: 4 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleImportData}
+          disabled={importing}
+          fullWidth
+        >
+          {importing ? 'Importing...' : 'Import/Refresh Strava Data'}
+        </Button>
+      </Box>
+      
       {/* Detailed Activity Data */}
       <Box sx={{ marginTop: 4 }}>
         <Typography variant="h5" gutterBottom>
@@ -181,19 +194,6 @@ const StravaDashboard = () => {
             </CardContent>
           </Card>
         ))}
-      </Box>
-
-      {/* Import/Refresh Button */}
-      <Box sx={{ marginTop: 4 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleImportData}
-          disabled={importing}
-          fullWidth
-        >
-          {importing ? 'Importing...' : 'Import/Refresh Strava Data'}
-        </Button>
       </Box>
     </Box>
   );

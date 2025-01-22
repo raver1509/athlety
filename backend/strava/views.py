@@ -120,6 +120,8 @@ def import_strava_data(request):
     # Dodatkowe dane - średnia prędkość
     total_speed = sum(activity['average_speed'] for activity in activities if 'average_speed' in activity) / total_activities if total_activities else 0
 
+    activities_details = activities
+
     # Słownik z wszystkimi danymi
     detailed_data = {
         "total_activities": total_activities,
@@ -136,6 +138,7 @@ def import_strava_data(request):
     user.total_elevation_gain = total_elevation
     user.total_time = total_time // 60  # W minutach
     user.average_speed = total_speed
+    user.activities_details = activities_details
     user.save()
 
     return Response(detailed_data)
